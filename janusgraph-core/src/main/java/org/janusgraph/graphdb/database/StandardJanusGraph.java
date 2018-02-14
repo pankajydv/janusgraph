@@ -455,9 +455,11 @@ public class StandardJanusGraph extends JanusGraphBlueprintsGraph {
 
     public static boolean acquireLock(InternalRelation relation, int pos, boolean acquireLocksConfig) {
         InternalRelationType type = (InternalRelationType)relation.getType();
-        return acquireLocksConfig && type.getConsistencyModifier()== ConsistencyModifier.LOCK &&
-                ( type.multiplicity().isUnique(EdgeDirection.fromPosition(pos))
-                        || pos==0 && type.multiplicity()== Multiplicity.SIMPLE);
+        //The commented part can never evluate to TRUE for edge with multiplicity = MULTI
+        //and the edge updates are never able to acquire lock.
+        return acquireLocksConfig && type.getConsistencyModifier()== ConsistencyModifier.LOCK;// &&
+//                ( type.multiplicity().isUnique(EdgeDirection.fromPosition(pos))
+//                        || pos==0 && type.multiplicity()== Multiplicity.SIMPLE);
     }
 
     public static boolean acquireLock(CompositeIndexType index, boolean acquireLocksConfig) {
